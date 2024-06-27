@@ -1,0 +1,73 @@
+server:
+  port: 16601
+#spring:
+#  application:
+#    name: '@project.artifactId@'
+spring:
+  kafka:
+    bootstrap-servers: 10.36.126.132:9092,10.36.126.133:9092,10.36.126.134:9092
+  application:
+    name: '@project.artifactId@'
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    hikari:
+      connection-timeout: 60000
+      maximum-pool-size: 10
+      minimum-idle: 1
+      leakDetection: 15000
+      idle-timeout: 25000
+      max-lifetime: 600000
+      auto-commit: true
+    password: oracle
+    url: jdbc:oracle:thin:@10.37.11.199:1539/ldsdb
+    username: LPB_EKYC
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.Oracle10gDialect
+        order_inserts: true
+        order_updates: true
+        generate_statistics: true
+        jdbc:
+          batch_size: 100
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: DEBUG
+        web: DEBUG
+        web.HttpLogging: INFO
+        web.filter.CommonsRequestLoggingFilter: DEBUG
+        orm.jpa: DEBUG
+        transaction: DEBUG
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  sleuth:
+    sampler:
+      probability: 1
+kafka:
+  send:
+    topic: check_token_send
+  reply:
+    topic: check_token_readly
+key:
+  private: MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCHLw+oq45LwR8sf4De1rQXZg8Xl4LH+FGjOxq8PbbSA+wshKnAjREwqxKyS2Gk+oN/GPiuUsjKYziyQkXPkmZ2+jgFgflgSUQWxQljP1/dibiD6TavaWUXKhBshzDkk4odT8l3qu3BNsD9YLo5WyhPa8LDEbxVEuXdhK54q9OSwzYSgCqjiRGgLaXUhrMf1a0fOJjgFOlM6yw6IV/pVHIEuLIf+RF6iBItWyHWwxbk13NfFjyJOb8KHg1Qmkmp4bGbD5f5+9gSrKxe1IHi2HIIf2e61LqZpXX+ImrP5lwHPZ5U1y4+NU/1L9FHuZkwcIhXB+AcyFMVAo+/IaWZyG5TAgMBAAECggEAURl9pm4NdwsL/bEcihN6hVMYGMovjnI939R0jJvlkwcBaA/KmxbGSlFHbSlmEgisXNKJVmOZzDlMaTzzDr1AtX4Vn9BC4G3z6EkbAayigZC+3nxJ72AmYog8xC8yuN5+jGkyb5Ve/3wuuZOPBRvYChWXCVoZh1xIBOY1mXVT/4YzYy8ers+2vASGuf4kBPd8Sn10YwXtxlwshkp76V/IMk0+89G/P/OnMy2dTtVkvzParLx4aGOl2dGdNz0I8NmYsvQ5I83zVb8duFLEn3Qv6mjwNw/c/eqv+nS2GYZ0bu2VO8kxMslVSP0QG42/4t6dJz70fk6wSu9HSSJlY0+DMQKBgQDk40/EqX4rVAGGo+s7NbEMM8FpTOCEpa9NTErTZWYCPpTuXY3aHsdoO80/7gSy3jBMwh6x3iFajynZ0l0lOcd0oWCffUPqLAJkrijFna5BKEUsTkzT5vkZnj2M0MkIpUELVJv6MSu0qz2RGzjPyhiVXilr3diuqiHkGEyKyyMF2QKBgQCXMk+ld7mrSdpI1P1HfYOIqnJUTSzFGE6tBJGMcdUSZYl3twhgSHrqRMMEW1yndwMuPYtxMOZOlIUxHGnLefajU9TMzAfSD6tsR7Nx7JGFWsMlJjJUtlWr9AnSLV3JYeHgmUYTvHBOlBzkSmPrd/+k9MQmjywTOihCbajsR73eCwKBgQCQBhCteNFxRhznscFUsoZDXVW4gq1MCk1yYC09M7KqeuKP0sJtm6xyBB80uPqv6muOAR/7YACw0SDOdTYzNFYzJ1B7SwEvGp4u5/+zyXJagZJ1PJfPRqk723xzXPUCwalaDdVP6xzLRG0rH2vyJAKwCl4aB7BOx7MnqbqQIx5YkQKBgGfsRt5e+pmHe6gP7b9TwDMRpN/Y4+rdGEbIGxrDq0anz+MfRXyYlROtC7ZU7cyVevQvjUbR65sbbqkg9H7NZ/8/Qcc6fi2eY59bcTXe+u8EQZmpNXMQmLZGWPHECPDAfLcZ4xbxsOfx2iH4F9Hjey3wp1oxkoPst3thUHiHnzOdAoGBAJtNXi+40KBS4lwVOrg9FUIEnzpndKIvF5jEYf9f0XtGzsoCybLMiDaxAoAtQmksXo97Shc2Gjc9RumLqkrJxSQsyhADICYYa6brC/cILS8lr1PzMj1HgvmpM6o0eaC0sBPTyNLOS77sHIpJ3xDWOagzG8r1f8RA37T3xSp5EdX8
+ekyc:
+  api:
+    url:
+      valid-nfc: https://appmbbank.com/api-lpb/lpb-ekyccorems/ekyccorems/validateNfcInfo
+      valid-ekyc: https://appmbbank.com/api-lpb/lpb-ekyccorems/ekyccorems/validateEkyc
+      onboarding: https://appmbbank.com/api-lpb/lpb-ekyccorems/ekyccorems/bindingWithOnboarding
+      verify: https://appmbbank.com/api-lpb/lpb-ekyccorems/ekyccorems/verifyWithAuthenData
+      binding: https://appmbbank.com/api-lpb/lpb-ekyccorems/ekyccorems/bindingWithAuthenData
+      getInfo: https://appmbbank.com/api-lpb/lpb-ekyccorems/ekyccorems/getOCRPlusWithAdvanceData
+      verify_ds_cert: http://api-gw-dev.lpbank.com.vn/gw/iswna/x-api-provider/api/verify

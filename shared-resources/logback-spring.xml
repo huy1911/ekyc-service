@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <!--    <include resource="org/springframework/boot/logging/logback/base.xml"/>-->
+    <springProperty scope="context" name="springAppName" source="spring.application.name"
+                    resource="bootstrap.properties"/>
+    <!--    <property name="appName" value="${springAppName:default}"/>-->
+    <!-- Example for logging into the build folder of your project -->
+    <property name="LOG_FILE" value="logs/log-${springAppName:-default}"/>
+
+    <!-- You can override this to have a custom pattern -->
+    <property name="CONSOLE_LOG_PATTERN"
+              value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40C{39}){cyan} %-4.4line%clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+
+    <!-- Appender to log to console -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <!-- Minimum logging level to be presented in the console logs-->
+            <level>DEBUG</level>
+        </filter>
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+    <!-- Appender to log to file -->
+    <appender name="flatfile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}.txt</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_FILE}.txt.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>10</maxHistory>
+            <!--            <maxFileSize>50MB</maxFileSize>-->
+        </rollingPolicy>
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <springProfile name="!live">
+        <!-- Appender to log to file in a JSON format -->
+        <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+            <destination>${ELK_SERVER:-10.36.126.15:7000}</destination>
+            <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+                <providers>
+                    <timestamp>
+                        <timeZone>UTC</timeZone>
+                    </timestamp>
+                    <pattern>
+                        <pattern>
+                            {
+                            "severity": "%level",
+                            "service": "${springAppName}",
+                            "trace": "%X{X-B3-TraceId:-}",
+                            "span": "%X{X-B3-SpanId:-}",
+                            "parent": "%X{X-B3-ParentSpanId:-}",
+                            "exportable": "%X{X-Span-Export:-}",
+                            "pid": "${PID:-}",
+                            "thread": "%thread",
+                            "class": "%C{40}",
+                            "function": "%M",
+                            "context.startTime": "%X{startTime}",
+                            "context.logType": "%X{logType}",
+                            "context.uuid": "%X{uuid}",
+                            "context.msgId": "%X{clientMessageId}",
+                            "context.ipClient": "%X{ipClient}",
+                            "context.duration": "%X{duration}",
+                            "context.jobId": "%X{jobId}",
+                            "message": "%message"
+                            }
+                        </pattern>
+                    </pattern>
+                </providers>
+            </encoder>
+        </appender>
+    </springProfile>
+
+    <!--    Config log run on local-->
+    <springProfile name="default,dev,docker,k8slive">
+        <root level="INFO">
+            <!--        log to console, comment this when run on server-->
+            <appender-ref ref="console"/>
+            <!--        send to ELK Stack-->
+            <appender-ref ref="logstash"/>
+            <!--        write to file-->
+            <appender-ref ref="flatfile"/>
+        </root>
+    </springProfile>
+
+    <!--    Config log run on server-->
+    <springProfile name="server">
+        <root level="INFO">
+            <!--        send to ELK Stack-->
+            <appender-ref ref="logstash"/>
+            <!--        write to file-->
+            <appender-ref ref="flatfile"/>
+        </root>
+    </springProfile>
+
+    <!--    Config log run on server live-->
+    <springProfile name="live">
+        <root level="INFO">
+            <!--        write to file-->
+            <appender-ref ref="flatfile"/>
+        </root>
+    </springProfile>
+
+</configuration>

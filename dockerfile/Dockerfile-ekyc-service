@@ -1,0 +1,34 @@
+# Alpine Linux with OpenJDK JRE
+FROM harbor-registry.lienvietpostbank.com.vn:5443/library/mid-base-openjdk:dev-1.0.0
+ENV SERVICE_MODULE ekyc-service
+# Define environment variable
+#ENV NAME World
+ENV TZ 'Asia/Ho_Chi_Minh'
+
+# Install any needed packages
+#RUN apk add --no-cache bash
+#RUN apk add --no-cache tzdata
+#RUN apk add vim
+#RUN apk add --update htop
+
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+RUN echo "alias tailf='tail -f -n'" >> ~/.bashrc
+RUN echo "alias ll='ls -alF'" >> ~/.bashrc
+RUN ["/bin/bash", "-c", "source ~/.bashrc"]
+
+RUN mkdir -p /app/conf
+
+# Set the working directory to /app
+WORKDIR /app
+
+# Copy the current directory contents into the container at /app
+COPY ./script/entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+COPY ./target/${SERVICE_MODULE} /app/jars
+
+# Make port  available to the world outside this container
+EXPOSE 16601
+
+# Run service when the container launches
+CMD ["./entrypoint.sh"]

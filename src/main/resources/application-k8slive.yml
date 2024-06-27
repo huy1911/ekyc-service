@@ -1,0 +1,80 @@
+server:
+  port: 16601
+spring:
+  kafka:
+    bootstrap-servers: 10.160.96.29:9092,10.160.96.30:9092,10.160.96.31:9092,10.160.96.32:9092,10.160.96.33:9092,10.160.96.34:9092
+  application:
+    name: '@project.artifactId@'
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    hikari:
+      connection-timeout: 60000
+      maximum-pool-size: 10
+      minimum-idle: 1
+      leakDetection: 15000
+      idle-timeout: 25000
+      max-lifetime: 600000
+      auto-commit: true
+    password: EKyClpb!2024
+    url: jdbc:oracle:thin:@openapidb.lpbank.com.vn:1521/openapidb
+    username: LPB_EKYC
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.Oracle10gDialect
+        order_inserts: true
+        order_updates: true
+        generate_statistics: true
+        jdbc:
+          batch_size: 100
+  sleuth:
+    sampler:
+      probability: 1
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              MongoTemplate: DEBUG
+        web: DEBUG
+        web.HttpLogging: INFO
+        web.filter.CommonsRequestLoggingFilter: DEBUG
+        orm.jpa: DEBUG
+        transaction: DEBUG
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+ribbon:
+  ServerListRefreshInterval: 5000
+
+kafka:
+  send:
+    topic: check_token_live_send
+  reply:
+    topic: check_token_live_readly
+key:
+  private: MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCq+LomQvBJNhGBUm9c2ttFXQMQJcJBV0wRQY/3y4KrAbsUNCrJoPr3Z9NzozDw2J6S32RYZ/YlklWb5hBIXAgiWCf+OPqvMj0XFatlDy0ovO6aXsPZq7dXjfyUIbCIIHbBRU06alb5eX2pvyTZ5wJuvIruO+MAUA+QMyOBTtGp9n6SFzQeU+Za2cHA3B1iQlj3V2Uy25dkwUHkUF7zZbRRHgNG33BOkfRm13HCINGHv45wmaoju19kTgIJkTwlEgaprdI4bXfIeWbkoLE4nYxlUwKqI2nuqCwsd3MQbNa8t5BoF+B17dpqnmdoLbFsUoZKB0tQ+MGLVrMpE52Cnfj5AgMBAAECggEAC5MSoRf7he1N4pQm22GqogfBtxRjUgKbsPhgC33AzxxrIptEgUlvbBPglg3IeKmllJpgg/anzJPbTVZWKFvophCTRovrdrRfO+KY65rLKxydR6CeQCx2mUwQuyOLvK978qojKA7+a928cuMwlrrjqIUFn8q4m7MP1qqLnwuruIaN1vwoqELb0vjCdhBU/9H2RHscMT+rpPhFlql917x+/c2cRkfYx4tDP9LkpBI/p5MZRcYhrtSM/CKcHTjiiZdWfqFoJDlIgFflI//hObLlWyzJTYK5ynsXVNfeeTj79k16d+TMAiNZpuNuNo15SER31njF87IjWs+Fq9DG/7LIvQKBgQDf/odjuVcAjAJzV2xshjbMl4SDfNkAgQAWRvtDUmsUrEeba9aOokGMHZR7SSv39kK0ssF7Cnoa8CG9iZEmif8dVQMi7Y60B+LfMsg07mzWUiRa8UpcNNBBTHGLK83LHUZy9OXddSU3SOx6ITEiTpjJIno37fNMwo7P3B7eYWBwDQKBgQDDZq+OIXpj2Uem4ECW9Tu8s4ZGa3vz7+QL7T3/tA7gp4d0DQ2yLY82EV76Zev+jLouEBnoGeP94/m1RQunFT8En+YOgRGzX2YFEXe1tgnvCPm+4seU/c5oZ62qF1eHt/8gsEUSoQn3M3Y7AAFBtlPKoYIActceyRryrC2iji0FnQKBgQDEOlHXbjWmuAEplGvawtVc9FvVaNkeFOTDn1ldR+WhDbAJmzYybDiqC/vY6WhIaQdVD8hqBuqjkLyuM8biEUBaLPB7d8ttMf9xcyZrIHheZUWOGhX/oxDSM6rAthYqGzJtYNfC424/+XWZJFzL5jj482hIeP+MvmCn/flY7cuzPQKBgCDKfK+HYria3/FbNLugj9PM9L2gj/6RxV1TBNKCbvS4aHzLK/84sg3KwHuY2w+uohfUz+QpZB9ZQLBw09HIOPkXtE2+zy+g1MgI9GPkFqqsgOzNtdyE8zyGGZivrhqyf/gGXLERoVCArFieWZejd1BL5jsZCoy6BvGuf0IGRfvpAoGAUzJuzWZ2x/WiwVxSQ/EpGKznU5Fj3I+JD+fal4zh+Tczqa/XHTiuqRokRd9h/B2laQ2kEQ2xmn1hvihLUf0BDHMAfgOxbPFNFV/KCQDhCeHBRxrl9lJhb3vAuP/VccbltLitBdn3BxZfmv8mHv5fXQL8XelDtKwMfdlJ+76jZ/U=
+
+ekyc:
+  api:
+    url:
+      valid-nfc: http://intmgw.lpbank.com.vn/gw/internal/lpb-ekyc-core/lpb-ekyccorems/ekyccorems/validateNfcInfo
+      valid-ekyc: http://intmgw.lpbank.com.vn/gw/internal/lpb-ekyc-core/lpb-ekyccorems/ekyccorems/validateEkyc
+      onboarding: http://intmgw.lpbank.com.vn/gw/internal/lpb-ekyc-core/lpb-ekyccorems/ekyccorems/bindingWithOnboarding
+      verify: http://intmgw.lpbank.com.vn/gw/internal/lpb-ekyc-core/lpb-ekyccorems/ekyccorems/verifyWithAuthenData
+      binding: http://intmgw.lpbank.com.vn/gw/internal/lpb-ekyc-core/lpb-ekyccorems/ekyccorems/bindingWithAuthenData
+      getInfo: http://intmgw.lpbank.com.vn/gw/internal/lpb-ekyc-core/lpb-ekyccorems/ekyccorems/getOCRPlusWithAdvanceData
+      verify_ds_cert: http://intmgw.lpbank.com.vn/gw/iswna/x-api-provider/api/verify
